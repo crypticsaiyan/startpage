@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Year Progress</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Tiny5&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background-image: url("./images/thunder.gif");
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        color: white;
+        font-family: "Tiny5";
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        z-index: -2;
+      }
+      .year {
+        font-size: 2rem;
+      }
+      .progress {
+        font-size: 1.25rem;
+        font-weight: 700;
+        white-space: pre;
+        padding: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      }
+      .main {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .time {
+        font-size: 6rem;
+        font-weight: 700;
+        letter-spacing: 0.25rem;
+      }
+      .greeting {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5em;
+        color: #fff;
+        text-shadow: 0 0 8px #000, 0 0 2px #000;
+      }
+      .mask {
+        position: absolute;
+        height: 100vh;
+        width: 100vw;
+        z-index: -1;
+        background-color: black;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mask"></div>
+    <div class="progress" id="yearProgress"></div>
+    <div class="main">
+      <div class="time"></div>
+      <div class="greeting"></div>
+    </div>
+
+    <script>
+      function updateGreeting() {
+        const now = new Date();
+        const hour = now.getHours();
+        let greeting = "";
+        if (hour >= 5 && hour < 12) {
+          greeting = "Good morning";
+        } else if (hour >= 12 && hour < 17) {
+          greeting = "Good afternoon";
+        } else if (hour >= 17 && hour < 21) {
+          greeting = "Good evening";
+        } else {
+          greeting = "Good night";
+        }
+        document.querySelector(".greeting").textContent = greeting;
+      }
+      function updateYearProgress() {
+        const now = new Date();
+        const start = new Date(now.getFullYear(), 0, 1);
+        const end = new Date(now.getFullYear() + 1, 0, 1);
+
+        const progress = (now - start) / (end - start);
+        const barLength = 20; // number of blocks
+        const filled = Math.floor(progress * barLength);
+
+        const bar = "█".repeat(filled) + "░".repeat(barLength - filled);
+        document.getElementById(
+          "yearProgress"
+        ).innerHTML = `<span class="year">${now.getFullYear()}</span>&nbsp;&nbsp;${bar}`;
+      }
+
+      function updateTime() {
+        const now = new Date();
+        // Format as HH:MM in 24-hour format
+        const hours = now.getHours().toString().padStart(2, "0");
+        const minutes = now.getMinutes().toString().padStart(2, "0");
+        const timeString = `${hours}:${minutes}`;
+        document.querySelector(".time").textContent = timeString;
+      }
+
+      updateYearProgress();
+      updateTime();
+      updateGreeting();
+      setInterval(updateYearProgress, 60 * 60 * 1000); // update year progress every hour
+      setInterval(updateTime, 1000); // update time every second
+      setInterval(updateGreeting, 60 * 1000); // update greeting every minute
+    </script>
+  </body>
+</html>
